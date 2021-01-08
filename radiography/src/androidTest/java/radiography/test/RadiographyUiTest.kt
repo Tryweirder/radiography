@@ -48,7 +48,7 @@ class RadiographyUiTest {
 
     showDialog {
       AlertDialog.Builder(activityRule.activity)
-          .create()
+        .create()
     }
 
     val hierarchy = Radiography.scan()
@@ -61,13 +61,13 @@ class RadiographyUiTest {
 
     showDialog {
       AlertDialog.Builder(activityRule.activity)
-          .setTitle("Dialog title")
-          .create()
+        .setTitle("Dialog title")
+        .create()
     }
 
     val hierarchy = Radiography.scan(
-        scanScope = FocusedWindowScope,
-        viewStateRenderers = DefaultsIncludingPii
+      scanScope = FocusedWindowScope,
+      viewStateRenderers = DefaultsIncludingPii
     )
 
     assertThat(hierarchy).contains("window-focus:true")
@@ -77,8 +77,8 @@ class RadiographyUiTest {
   }
 
   private fun String.countSubstring(substring: String) = windowed(substring.length)
-      .filter { it == substring }
-      .count()
+    .filter { it == substring }
+    .count()
 
   private fun showDialog(block: () -> Dialog) {
     lateinit var dialog: Dialog

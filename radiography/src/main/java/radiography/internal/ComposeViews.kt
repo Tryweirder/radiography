@@ -13,7 +13,7 @@ import radiography.ExperimentalRadiographyComposeApi
 import kotlin.LazyThreadSafetyMode.PUBLICATION
 
 private val VIEW_KEYED_TAGS_FIELD = View::class.java.getDeclaredField("mKeyedTags")
-    .apply { isAccessible = true }
+  .apply { isAccessible = true }
 private const val WRAPPED_COMPOSITION_CLASS_NAME = "androidx.compose.ui.platform.WrappedComposition"
 private const val COMPOSITION_IMPL_CLASS_NAME = "androidx.compose.runtime.CompositionImpl"
 private const val ANDROID_COMPOSE_VIEW_CLASS_NAME =
@@ -21,8 +21,8 @@ private const val ANDROID_COMPOSE_VIEW_CLASS_NAME =
 
 internal const val COMPOSE_UNSUPPORTED_MESSAGE =
   "Composition was found, but either Compose Tooling artifact is missing or the Compose version " +
-      "is not supported. Please ensure you have a dependency on androidx.ui:ui-tooling or check " +
-      "https://github.com/square/radiography for a new release."
+    "is not supported. Please ensure you have a dependency on androidx.ui:ui-tooling or check " +
+    "https://github.com/square/radiography for a new release."
 
 /** Reflectively tries to determine if Compose is on the classpath. */
 internal val isComposeAvailable by lazy(PUBLICATION) {
@@ -56,8 +56,8 @@ internal fun getComposeScannableViews(composeView: View): Pair<List<ScannableVie
   var linkageError: LinkageError? = null
   val scannableViews = try {
     tryGetLayoutInfos(composeView)
-        ?.map(::ComposeView)
-        ?.toList()
+      ?.map(::ComposeView)
+      ?.toList()
   } catch (e: LinkageError) {
     // The view looks like an AndroidComposeView, but the Compose code on the classpath is
     // not what we expected – the app is probably using a newer (or older) version of Compose than
@@ -71,7 +71,7 @@ internal fun getComposeScannableViews(composeView: View): Pair<List<ScannableVie
   return scannableViews?.let { Pair(it, true) }
   // Display a warning but then continue rendering Android views, since the composition may emit
   // view children and so it's better than nothing.
-      ?: Pair(listOf(composeRenderingError(linkageError)), false)
+    ?: Pair(listOf(composeRenderingError(linkageError)), false)
 }
 
 /**
@@ -100,7 +100,7 @@ private fun tryGetLayoutInfos(composeView: View): Sequence<ComposeLayoutInfo>? {
   val keyedTags = composeView.getKeyedTags()
   val composition = keyedTags.first { it is Composition } as Composition? ?: return null
   val composer = composition.unwrap()
-      .getComposerOrNull() ?: return null
+    .getComposerOrNull() ?: return null
 
   // Composer and its slot table are finally public API again.
   // asTree is provided by the Compose Tooling library. It "reads" the slot table and parses it
@@ -137,7 +137,7 @@ private fun Composition.unwrap(): Composition {
   if (this::class.java.name != WRAPPED_COMPOSITION_CLASS_NAME) return this
   val wrappedClass = Class.forName(WRAPPED_COMPOSITION_CLASS_NAME)
   val originalField = wrappedClass.getDeclaredField("original")
-      .apply { isAccessible = true }
+    .apply { isAccessible = true }
   return originalField.get(this) as Composition
 }
 
@@ -148,6 +148,6 @@ private fun Composition.getComposerOrNull(): Composer<*>? {
   if (this::class.java.name != COMPOSITION_IMPL_CLASS_NAME) return null
   val compositionImplClass = Class.forName(COMPOSITION_IMPL_CLASS_NAME)
   val composerField = compositionImplClass.getDeclaredField("composer")
-      .apply { isAccessible = true }
+    .apply { isAccessible = true }
   return composerField.get(this) as? Composer<*>
 }
